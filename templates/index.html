@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="organization-form-container">
+
+            <form action="/" method="POST">
+                <div class="form-inline">
+                    {% csrf_token %}
+                    <div class="col-md-10 form-group {% if org_form.organization_name.errors %} has-error {% endif %}">
+                        {{ org_form.organization_name.errors }}
+                        {{ org_form.organization_name }}
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

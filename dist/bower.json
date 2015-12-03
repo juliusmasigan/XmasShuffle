@@ -1,0 +1,23 @@
+{
+  "name": "XmasShuffle",
+  "homepage": "https://github.com/juliusmasigan/XmasShuffle",
+  "description": "",
+  "main": "",
+  "moduleType": [
+    "amd"
+  ],
+  "authors": [
+    "Julius Masigan"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "bootstrap": "~3.3.6"
+  }
+}
