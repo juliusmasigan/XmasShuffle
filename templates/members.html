@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+        <div class="organization-form-container">
+            <form action="{{ form_action }}" method="POST">
+                <div class="form-inline">
+                    {% csrf_token %}
+                    <div class="col-md-12 form-group {% if org_form.member_emails.errors %} has-error {% endif %}">
+                        <div class="input-group col-md-12">
+                            {{ org_form.member_emails }}
+                            <span class="input-group-btn">
+                                <input type="submit" class="btn btn-primary" value="Create">
+                            </span>
+                        </div>
+                        {% if org_form.member_emails.errors %}
+                        <div class="alert alert-danger" role="alert">{{ org_form.member_emails.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
