@@ -10,15 +10,15 @@
             <form action="{{ form_action }}" method="POST">
                 <div class="form-inline">
                     {% csrf_token %}
-                    <div class="col-md-12 form-group {% if org_form.member_emails.errors %} has-error {% endif %}">
+                    <div class="col-md-12 form-group {% if org_form.organization_members.errors %} has-error {% endif %}">
                         <div class="input-group col-md-12">
-                            {{ org_form.member_emails }}
+                            {{ org_form.organization_members }}
                             <span class="input-group-btn">
                                 <input type="submit" class="btn btn-primary" value="Create">
                             </span>
                         </div>
-                        {% if org_form.member_emails.errors %}
-                        <div class="alert alert-danger" role="alert">{{ org_form.member_emails.errors }}</div>
+                        {% if org_form.organization_members.errors %}
+                        <div class="alert alert-danger" role="alert">{{ org_form.organization_members.errors }}</div>
                         {% endif %}
                     </div>
                 </div>

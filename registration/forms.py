@@ -9,7 +9,7 @@ class OrganizationRegistrationForm(forms.Form):
     }))
 
 class OrganizationMembersForm(forms.Form):
-    emails = forms.CharField(label='', widget=forms.TextInput(attrs={
+    organization_members = forms.CharField(label='', widget=forms.TextInput(attrs={
         'placeholder':'Member Emails',
         'class':'organization-reg-input form-control',
         'autofocus':'',

@@ -31,6 +31,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='member',
             name='organization',
-            field=models.ForeignKey(to='registration.Organization'),
+            field=models.ForeignKey(related_name='organizations', to='registration.Organization'),
         ),
     ]

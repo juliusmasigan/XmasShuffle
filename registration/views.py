@@ -24,10 +24,10 @@ def members(request, org_link=None):
     form = OrganizationMembersForm(request.POST or None)
     
     if form.is_valid():
-        member_emails = form.cleaned_data['emails']
+        members_email = form.cleaned_data['organization_members']
 
         emails = []
-        for email in member_emails.split(', '):
+        for email in members_email.split(', '):
             emails.append(Member(email=email))
 
     form_action = reverse('members', kwargs={'org_link':org_link})
