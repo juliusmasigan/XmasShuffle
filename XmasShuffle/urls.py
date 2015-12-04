@@ -9,5 +9,6 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', views.index, name='index'),
+    url(r'^(?P<org_link>[a-fA-F0-9]{32})/members/', views.members, name='members'),
     url(r'^admin/', include(admin.site.urls)),
 ]

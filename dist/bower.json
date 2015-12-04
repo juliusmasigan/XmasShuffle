@@ -18,6 +18,10 @@
     "tests"
   ],
   "devDependencies": {
+    "bootstrap": "~3.3.6",
+    "bootstrap-tokenfield": "~0.12.1"
+  },
+  "resolutions": {
     "bootstrap": "~3.3.6"
   }
 }

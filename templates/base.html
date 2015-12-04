@@ -14,6 +14,9 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+    
+    <!-- Bootstrap Tokenfield plugin CSS -->
+    <link href="{% static 'css/bootstrap-tokenfield.min.css' %}" rel="stylesheet" />
 
     <!-- Custom style -->
     <link href="{% static 'css/main.css' %}" rel="stylesheet" />
@@ -37,6 +40,13 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-tokenfield.min.js' %}"></script>
+
+    <script type="application/javascript">
+        $(document).ready(function() {
+            $('#id_member_emails').tokenfield();
+        });
+    </script>
   </body>
 </html>
 
