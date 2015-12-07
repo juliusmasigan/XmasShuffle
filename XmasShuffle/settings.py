@@ -122,3 +122,20 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+
+
+# Mail Configuration
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+
+EMAIL_HOST = env('EMAIL_HOST', required=True)
+
+EMAIL_PORT = env('EMAIL_PORT', required=True)
+
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', required=True)
+
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', required=True)
+
+EMAIL_USE_SSL = env('EMAIL_SSL', default=False)
+
+#EMAIL_USE_TLS = env('EMAIL_TLS', default=False)
+
