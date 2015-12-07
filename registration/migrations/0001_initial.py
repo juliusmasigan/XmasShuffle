@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 ('email', models.CharField(max_length=255, db_index=True)),
                 ('code_name', models.CharField(max_length=255, db_index=True)),
                 ('wish_list', models.TextField()),
+                ('member_link', models.UUIDField(default=uuid.uuid4, editable=False)),
             ],
         ),
         migrations.CreateModel(
@@ -32,5 +33,9 @@ class Migration(migrations.Migration):
             model_name='member',
             name='organization',
             field=models.ForeignKey(related_name='organizations', to='registration.Organization'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='member',
+            unique_together=set([('email', 'organization')]),
         ),
     ]

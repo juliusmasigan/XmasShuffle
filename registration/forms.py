@@ -9,8 +9,8 @@ class OrganizationRegistrationForm(forms.Form):
     }))
 
 class OrganizationMembersForm(forms.Form):
-    organization_members = forms.CharField(label='', widget=forms.TextInput(attrs={
-        'placeholder':'Member Emails',
+    organization_members = forms.CharField(label='', required=False, widget=forms.TextInput(attrs={
+        'placeholder':'Members Email Address',
         'class':'organization-reg-input form-control',
         'autofocus':'',
     }))
