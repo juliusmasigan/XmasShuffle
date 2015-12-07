@@ -42,7 +42,7 @@ def invite_members(members=None):
         else:
             messages = messages + (('Chris Kringle', message_body, SENDER, [member.email]),)
 
-    send_mass_mail(messages, fail_silently=True)
+    sent = send_mass_mail(messages, fail_silently=True)
 
 def create_members(org, new_emails=[]):
 	new_emails_obj = []
