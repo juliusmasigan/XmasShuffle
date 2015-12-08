@@ -17,12 +17,12 @@ class OrganizationMembersForm(forms.Form):
 
 class WishForm(forms.Form):
 	code_name = forms.CharField(label='', max_length=255, widget=forms.TextInput(attrs={
-		'placeholder':'Codename',
+		'placeholder':'Codename: Hollywood/Local Celebrity',
 		'class':'form-control wish-codename-input',
 		'autofocus':'',
 	}))
-	wish_list = forms.CharField(label='', required=False, widget=forms.Textarea(attrs={
-		'placeholder':'List your wishes here.',
+	wish_list = forms.CharField(label='', widget=forms.Textarea(attrs={
+		'placeholder':'List your wishes here. Put numbers 1-3.',
 		'class':'form-control wish-list-input',
 		'rows':'5',
 	}))

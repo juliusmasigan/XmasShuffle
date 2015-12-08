@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.conf.urls import include, url, patterns
 from django.contrib import admin
 
 from registration import views
@@ -14,3 +14,8 @@ urlpatterns = [
     url(r'^members/(?P<org_link>[a-fA-F0-9]{32})/shuffle', views.shuffle, name='shuffle'),
     url(r'^admin/', include(admin.site.urls)),
 ]
+
+# Django-RQ url
+urlpatterns += patterns('',
+    url(r'^django-rq/', include('django_rq.urls')),
+)

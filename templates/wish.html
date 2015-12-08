@@ -3,8 +3,16 @@
 {% block content %}
 
 
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
+<div class="row wish-container">
+    <div class="col-md-6 col-md-offset-3">
+        {% if form_success %}
+        <div class="alert alert-success" role="alert">
+            <b>Well done!</b> You successfully submitted your wish!
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6 col-md-offset-3">
 
         <div class="wish-form-container">
             <form action="{{ form_action }}" method="POST">
@@ -13,9 +21,25 @@
                     <div class="col-md-12 form-group {% if wish_form.code_name.errors %} has-error {% endif %}">
 						{{ wish_form.code_name }}
                     </div>
+                    {% if wish_form.code_name.errors %}
+                    <div class="col-md-12 error-container">
+                        <div class="alert alert-danger" role="alert">
+                            {{ wish_form.code_name.errors }}
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <div class="col-md-12 form-group {% if wish_form.wish_list.errors %} has-error {% endif %}">
 						{{ wish_form.wish_list }}
                     </div>
+                    {% if wish_form.wish_list.errors %}
+                    <div class="col-md-12 error-container">
+                        <div class="alert alert-danger" role="alert">
+                            {{ wish_form.wish_list.errors }}
+                        </div>
+                    </div>
+                    {% endif %}
+
 					<div class="col-md-12 text-center">
 						<button type="submit" class="btn btn-lg btn-primary">Wish</button>
 					</div>

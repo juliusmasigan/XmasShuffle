@@ -31,32 +31,35 @@ def index(request):
     return render(request, 'index.html', context)
 
 def invite_members(members=None):
-	messages = None
-	for member in members:
-		path_link = reverse('wish', kwargs={'member_link':re.sub('-', '', str(member.member_link))})
-		member_link = urlunsplit((URL_PARTS['scheme'], URL_PARTS['netloc'], path_link, '', ''))
-		message_body = 'Your wish come true.\n\n' \
-		'You are invited to {0} Chris Kringle!\n' \
-		'Visit this the link below to make a wish:\n\n{1}'.format(member.organization.name, member_link)
-		if messages is None:
-			messages = (('Chris Kringle', message_body, SENDER, [member.email]),)
-		else:
-			messages = messages + (('Chris Kringle', message_body, SENDER, [member.email]),)
+    messages = None
+    for member in members:
+        path_link = reverse('wish', kwargs={'member_link':re.sub('-', '', str(member.member_link))})
+        member_link = urlunsplit((URL_PARTS['scheme'], URL_PARTS['netloc'], path_link, '', ''))
+        message_body = 'Your wish come true!\n' \
+        'You are invited to {0} Chris Kringle!\n\n' \
+        'Open the link below to make a wish:\n{1}'.format(member.organization.name, member_link)
+        if messages is None:
+            messages = (('Chris Kringle', message_body, SENDER, [member.email]),)
+        else:
+            messages = messages + (('Chris Kringle', message_body, SENDER, [member.email]),)
 
-	sent = send_mass_mail(messages, fail_silently=True)
+    sent = send_mass_mail(messages, fail_silently=False)
+    return sent
 
 def create_members(org, new_emails=[]):
-	new_emails_obj = []
-	if new_emails:
-		for new_email in new_emails:
-			new_emails_obj.append(Member(email=new_email, organization=org))
+    new_emails_obj = []
+    if new_emails:
+        for new_email in new_emails:
+            new_emails_obj.append(Member(email=new_email, organization=org))
 
-		members = Member.objects.bulk_create(new_emails_obj)
-		invite_members(members)
+        members = Member.objects.bulk_create(new_emails_obj)
+        invite_members(members)
+
+    return members
 
 def remove_members(org, del_emails=[]):
 	if del_emails:
-		del_members = Member.objects.filter(email__in=del_emails)
+		del_members = Member.objects.filter(email__in=del_emails, organization=org)
 		del_members.delete()
 
 def members(request, org_link=None):
@@ -93,20 +96,22 @@ def members(request, org_link=None):
 	return render(request, 'members.html', context)
 
 def wish(request, member_link=None):
-	form = WishForm(request.POST or None)
-	member = get_object_or_404(Member, member_link=member_link)
+    form = WishForm(request.POST or None)
+    member = get_object_or_404(Member, member_link=member_link)
 
-	if form.is_valid():
-		code_name = form.cleaned_data['code_name']
-		wish_list = form.cleaned_data['wish_list']
-		member.code_name = code_name
-		member.wish_list = wish_list
-		member.save()
+    form_success = False
+    if form.is_valid():
+        code_name = form.cleaned_data['code_name']
+        wish_list = form.cleaned_data['wish_list']
+        member.code_name = code_name
+        member.wish_list = wish_list
+        member.save()
+        form_success = True
 
-	form.initial = {'code_name':member.code_name, 'wish_list':member.wish_list}
-	form_action = reverse('wish', kwargs={'member_link':member_link})
-	context = {'form_action':form_action, 'wish_form':form}
-	return render(request, 'wish.html', context)
+    form.initial = {'code_name':member.code_name, 'wish_list':member.wish_list}
+    form_action = reverse('wish', kwargs={'member_link':member_link})
+    context = {'form_action':form_action, 'wish_form':form, 'form_success':form_success}
+    return render(request, 'wish.html', context)
 
 def shuffle(request, org_link=None):
 	if request.method == "POST":

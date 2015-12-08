@@ -54,6 +54,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'registration',
+
+    'django_rq',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -136,3 +138,25 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', required=True)
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', required=True)
 
 EMAIL_USE_SSL = env('EMAIL_SSL', default=False)
+
+
+# RQ Queue Configuration
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'PASSWORD': 'xmas-shuffle-queue',
+        'DEFAULT_TIMEOUT': 360,
+    },
+    'high': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'), # If you're on Heroku
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 500,
+    },
+    'low': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+    }
+}
