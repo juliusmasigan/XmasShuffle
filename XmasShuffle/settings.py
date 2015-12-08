@@ -139,6 +139,8 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', required=True)
 
 EMAIL_USE_SSL = env('EMAIL_SSL', default=False)
 
+print EMAIL_HOST
+
 
 # RQ Queue Configuration
 RQ_QUEUES = {
