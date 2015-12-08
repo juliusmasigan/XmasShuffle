@@ -40,7 +40,7 @@ SECRET_KEY = 'q!@%f&=8&kz=!7b864nag(a_dy#%bo-5p2z0-k6a&u2052(=9)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG_MODE', default=True, valuetype=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
