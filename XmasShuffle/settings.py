@@ -38,7 +38,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'q!@%f&=8&kz=!7b864nag(a_dy#%bo-5p2z0-k6a&u2052(=9)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG_MODE', default=True, valuetype=bool)
 
 ALLOWED_HOSTS = []
 
@@ -137,9 +137,7 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', required=True)
 
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', required=True)
 
-EMAIL_USE_SSL = env('EMAIL_SSL', default=False)
-
-print EMAIL_HOST
+EMAIL_USE_SSL = env('EMAIL_SSL', default=False, valuetype=bool)
 
 
 # RQ Queue Configuration
