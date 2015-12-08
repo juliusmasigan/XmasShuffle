@@ -1,3 +1,3 @@
-web: gunicorn --pythonpath="$PWD" XmasShuffle.wsgi:application
+web: gunicorn --pythonpath="$PWD/XmasShuffle" XmasShuffle.wsgi
 
-worker: python XmasShuffle/manage.py rqworker heroku default
+#worker: python XmasShuffle/manage.py rqworker heroku default
