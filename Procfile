@@ -1,1 +1,1 @@
-web: gunicorn XmasShuffle.wsgi --log-file -
+web: source config.env && gunicorn XmasShuffle.wsgi --log-file -
