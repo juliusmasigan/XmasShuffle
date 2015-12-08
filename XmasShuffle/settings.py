@@ -149,14 +149,9 @@ RQ_QUEUES = {
         'PASSWORD': 'xmas-shuffle-queue',
         'DEFAULT_TIMEOUT': 360,
     },
-    'high': {
+    'heroku': {
         'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'), # If you're on Heroku
         'DB': 0,
         'DEFAULT_TIMEOUT': 500,
     },
-    'low': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-    }
 }
