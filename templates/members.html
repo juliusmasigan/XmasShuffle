@@ -10,11 +10,11 @@
             <form action="{{ form_action }}" method="POST">
                 <div class="form-inline">
                     {% csrf_token %}
-                    <div class="col-md-12 form-group {% if org_form.organization_members.errors %} has-error {% endif %}">
+                    <div class="col-md-12 form-group-lg {% if org_form.organization_members.errors %} has-error {% endif %}">
                         <div class="input-group col-md-12">
                             {{ org_form.organization_members }}
                             <span class="input-group-btn">
-                                <input type="submit" class="btn btn-primary" value="Create">
+                                <button type="submit" class="btn btn-lg btn-primary">Create</button>
                             </span>
                         </div>
                         {% if org_form.organization_members.errors %}
@@ -26,6 +26,17 @@
         </div>
 
     </div>
+
+	{% if do_shuffle %}
+	<div class="col-md-4 col-md-offset-4">
+		<div class="shuffle-form-container">
+			<form action="{% url 'shuffle' org_link %}" method="POST">
+				{% csrf_token %}
+				<button type="submit" class="btn btn-lg btn-primary">Shuffle Now</button>
+			</form>
+		</div>
+	</div>
+	{% endif %}
 </div>
 
 {% endblock %}

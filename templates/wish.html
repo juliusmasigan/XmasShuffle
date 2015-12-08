@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+        <div class="wish-form-container">
+            <form action="{{ form_action }}" method="POST">
+                <div class="row">
+                    {% csrf_token %}
+                    <div class="col-md-12 form-group {% if wish_form.code_name.errors %} has-error {% endif %}">
+						{{ wish_form.code_name }}
+                    </div>
+                    <div class="col-md-12 form-group {% if wish_form.wish_list.errors %} has-error {% endif %}">
+						{{ wish_form.wish_list }}
+                    </div>
+					<div class="col-md-12 text-center">
+						<button type="submit" class="btn btn-lg btn-primary">Wish</button>
+					</div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -10,11 +10,11 @@
             <form action="/" method="POST">
                 <div class="form-inline">
                     {% csrf_token %}
-                    <div class="col-md-12 form-group {% if org_form.organization_name.errors %} has-error {% endif %}">
+                    <div class="col-md-12 form-group-lg {% if org_form.organization_name.errors %} has-error {% endif %}">
                         <div class="input-group col-md-12">
                             {{ org_form.organization_name }}
                             <span class="input-group-btn">
-                                <input type="submit" class="btn btn-primary" value="Create">
+                                <button type="submit" class="btn btn-lg btn-primary">Create</button>
                             </span>
                         </div>
                         {% if org_form.organization_name.errors %}
