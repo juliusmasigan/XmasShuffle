@@ -9,6 +9,8 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', views.index, name='index'),
-    url(r'^(?P<org_link>[a-fA-F0-9]{32})/members/', views.members, name='members'),
+    url(r'^members/(?P<org_link>[a-fA-F0-9]{32})$', views.members, name='members'),
+    url(r'^wish/(?P<member_link>[a-fA-F0-9]{32})', views.wish, name='wish'),
+    url(r'^members/(?P<org_link>[a-fA-F0-9]{32})/shuffle', views.shuffle, name='shuffle'),
     url(r'^admin/', include(admin.site.urls)),
 ]

@@ -136,6 +136,3 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', required=True)
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', required=True)
 
 EMAIL_USE_SSL = env('EMAIL_SSL', default=False)
-
-#EMAIL_USE_TLS = env('EMAIL_TLS', default=False)
-

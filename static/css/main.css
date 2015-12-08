@@ -15,7 +15,7 @@ footer, .footer {
     font-size:1.5rem;
 }
 
-.organization-form-container {
+.wish-form-container, .organization-form-container {
     position:absolute;
     top:10rem;
     width:100%;
@@ -26,14 +26,10 @@ footer, .footer {
 }
 
 .organization-form-container form .organization-reg-input{
-    padding:2rem;
-    font-size:2rem;
     width:100%;
 }
 
-
-.organization-form-container form input.btn{
-    padding:1rem 2rem;
+.organization-form-container form button{
     width:100%;
 }
 
@@ -45,4 +41,34 @@ footer, .footer {
 .organization-form-container .alert ul{
     list-style:none;
     padding-left:0px;
+}
+
+.wish-form-container form .wish-codename-input{
+    padding:2rem;
+    font-size:2rem;
+    width:100%;
+}
+
+.wish-form-container form .wish-list-input{
+    padding:1rem 2rem;
+    font-size:1.5rem;
+    width:100%;
+}
+
+.wish-form-container button {
+	width:100%;
+}
+
+.tokenfield .token {
+	height:100%;
+}
+
+.shuffle-form-container {
+	position:absolute;
+	top:35rem;
+	width:100%;
+}
+
+.shuffle-form-container form button {
+	width:100%;
 }

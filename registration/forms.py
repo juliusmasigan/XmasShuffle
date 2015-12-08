@@ -14,3 +14,15 @@ class OrganizationMembersForm(forms.Form):
         'class':'organization-reg-input form-control',
         'autofocus':'',
     }))
+
+class WishForm(forms.Form):
+	code_name = forms.CharField(label='', max_length=255, widget=forms.TextInput(attrs={
+		'placeholder':'Codename',
+		'class':'form-control wish-codename-input',
+		'autofocus':'',
+	}))
+	wish_list = forms.CharField(label='', required=False, widget=forms.Textarea(attrs={
+		'placeholder':'List your wishes here.',
+		'class':'form-control wish-list-input',
+		'rows':'5',
+	}))
