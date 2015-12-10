@@ -1,17 +1,18 @@
 import re
+import django_rq
 
 from urlparse import urlunsplit
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
-from django.core.mail import send_mass_mail
+from django.core.mail import send_mail
 
 from .forms import OrganizationRegistrationForm, OrganizationMembersForm, WishForm
 from .models import Organization, Member
 
 
-SENDER = 'Automailer'
+SENDER = 'automailer@domain.com'
 URL_PARTS = {}
 # Create your views here.
 def index(request):
@@ -36,15 +37,17 @@ def invite_members(members=None):
         path_link = reverse('wish', kwargs={'member_link':re.sub('-', '', str(member.member_link))})
         member_link = urlunsplit((URL_PARTS['scheme'], URL_PARTS['netloc'], path_link, '', ''))
         message_body = 'Your wish come true!\n' \
-        'You are invited to {0} Chris Kringle!\n\n' \
+        'You are invited to {0} Kris Kringle!\n\n' \
         'Open the link below to make a wish:\n{1}'.format(member.organization.name, member_link)
-        if messages is None:
-            messages = (('Chris Kringle', message_body, SENDER, [member.email]),)
-        else:
-            messages = messages + (('Chris Kringle', message_body, SENDER, [member.email]),)
 
-    sent = send_mass_mail(messages, fail_silently=False)
-    return sent
+    	django_rq.enqueue(
+			send_mail,
+			subject='Kris Kringle',
+			message=message_body, 
+			from_email=SENDER,
+			recipient_list=[member.email,],
+			fail_silently=False
+		)
 
 def create_members(org, new_emails=[]):
     new_emails_obj = []

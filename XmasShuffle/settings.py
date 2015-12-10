@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'XmasShuffle.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': env('DB_ENGINE', default='django.db.backends.mysql'),
         'NAME': env('DB_NAME', required=True),
         'PASSWORD': env('DB_PASS', required=True),
         'USER': env('DB_USER', required=True),
@@ -146,7 +146,7 @@ RQ_QUEUES = {
         'HOST': 'localhost',
         'PORT': 6379,
         'DB': 0,
-        'PASSWORD': 'xmas-shuffle-queue',
+        #'PASSWORD': 'xmas-shuffle-queue',
         'DEFAULT_TIMEOUT': 360,
     },
     'heroku': {
