@@ -6,6 +6,7 @@ from urlparse import urlunsplit
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
+from django.db.models import Q
 from django.core.mail import send_mail
 
 from .forms import OrganizationRegistrationForm, OrganizationMembersForm, WishForm
@@ -117,7 +118,32 @@ def wish(request, member_link=None):
     return render(request, 'wish.html', context)
 
 def shuffle(request, org_link=None):
-	if request.method == "POST":
-		print "SHUFFLE"
-	
-	return render(request, 'shuffle.html')
+    if request.method == "POST":
+        # Check if everyone has wishlist or code_name
+        members = Member.objects.filter(organization__org_link=org_link)
+
+        unresponsive_members = []
+        for member in members:
+            if len(member.code_name.strip()) == 0 or len(member.wish_list.strip()) == 0:
+                unresponsive_members.append(member.email)
+
+            path_link = reverse('wish', kwargs={'member_link':re.sub('-', '', str(member.member_link))})
+            member_link = urlunsplit((URL_PARTS['scheme'], URL_PARTS['netloc'], path_link, '', ''))
+            message_body = 'Your wish come true!\n\n' \
+            'Kindly make your wish using the link below:\n{0}\n\n' \
+            'Deadline: Friday (Dec 11) at 12:00PM\n\n' \
+            'Shuffling will be done on Friday as well so make sure your wish has been listed!'.format(member_link)
+
+            django_rq.enqueue(
+                send_mail,
+                subject='Kris Kringle',
+                message=message_body,
+                from_email=SENDER,
+                recipient_list=[member.email,],
+                fail_silently=False
+            )
+
+        if len(unresponsive_members) > 0:
+            return redirect('members', org_link=org_link)
+
+        return render(request, 'shuffle.html')

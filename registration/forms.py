@@ -17,7 +17,7 @@ class OrganizationMembersForm(forms.Form):
 
 class WishForm(forms.Form):
 	code_name = forms.CharField(label='', max_length=255, widget=forms.TextInput(attrs={
-		'placeholder':'Codename: Hollywood/Local Celebrity',
+		'placeholder':'Codename: 2015 Hollywood/Local Movie Character',
 		'class':'form-control wish-codename-input',
 		'autofocus':'',
 	}))
