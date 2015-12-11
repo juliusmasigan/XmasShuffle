@@ -1,5 +1,6 @@
 import re
 import django_rq
+import random
 
 from urlparse import urlunsplit
 
@@ -95,6 +96,9 @@ def members(request, org_link=None):
 	# Prepopulate the members field.
 	form.initial = {'organization_members':', '.join(reg_emails)}
 	form_action = reverse('members', kwargs={'org_link':org_link})
+
+	# Fetch again the registered members.
+	reg_members = Member.objects.filter(organization=org)
 	do_shuffle = True if reg_members.count() > 1 else False
 	context = {'form_action':form_action, 'org_form':form, 'org_link':org_link, 'do_shuffle':do_shuffle}
 	return render(request, 'members.html', context)
@@ -117,33 +121,70 @@ def wish(request, member_link=None):
     context = {'form_action':form_action, 'wish_form':form, 'form_success':form_success}
     return render(request, 'wish.html', context)
 
+def resend_notification(members):
+    for member in members:
+        message_body = 'Your wish come true!\n\n' \
+        'Kindly make your wish using the link below:\n{0}\n\n' \
+        'Deadline: Friday (Dec 11) at 12:00PM\n\n' \
+        'Shuffling will be done on Friday as well so make sure your wish has been listed!'.format(member.member_link)
+
+        django_rq.enqueue(
+            send_mail,
+            subject='Kris Kringle',
+            message=message_body, 
+            from_email=SENDER,
+            recipient_list=[member.email,],
+            fail_silently=False
+        )
+
+def shuffle_members(members):
+	members_id = []
+	for member in members:
+		if not member.id in members_id:
+			members_id.append(member.id)
+
+	pairings = []
+	random.shuffle(members_id)
+	mail_subject = 'Kris Kringle'
+	message_body = 'You picked {0}!\n\n{0} wishes to have at least one of the following:\n{1}'
+	for index in range(len(members_id)):
+		try:
+			pair = members.get(pk=members_id[index])
+			riap = members.get(pk=members_id[index+1])
+		except IndexError:
+			pair = members.get(pk=members_id[index])
+			riap = members.get(pk=members_id[0])
+		finally:
+			django_rq.enqueue(
+				send_mail,
+				subject=mail_subject,
+				message=message_body.format(riap.code_name, riap.wish_list), 
+				from_email=SENDER,
+				recipient_list=[pair.email,],
+				fail_silently=False
+			)
+
 def shuffle(request, org_link=None):
+    global URL_PARTS
+    URL_PARTS = {'scheme':request.META.get('wsgi.url_scheme'), 'netloc':request.META.get('HTTP_HOST')}
+    members = Member.objects.filter(organization__org_link=org_link)
+
+    lazy_members_email = []
+    lazy_members = []
+    for member in members:
+        path_link = reverse('wish', kwargs={'member_link':re.sub('-', '', str(member.member_link))})
+        member_link = urlunsplit((URL_PARTS['scheme'], URL_PARTS['netloc'], path_link, '', ''))
+        member.member_link = member_link
+        if len(member.code_name.strip()) == 0 or len(member.wish_list.strip()) == 0:
+            lazy_members.append(member)
+            lazy_members_email.append(member.email)
+
     if request.method == "POST":
-        # Check if everyone has wishlist or code_name
-        members = Member.objects.filter(organization__org_link=org_link)
+        action = request.POST.get('action')
+        if action == 'resend_notif':
+            resend_notification(lazy_members)
+        else:
+            shuffle_members(members)
 
-        unresponsive_members = []
-        for member in members:
-            if len(member.code_name.strip()) == 0 or len(member.wish_list.strip()) == 0:
-                unresponsive_members.append(member.email)
-
-            path_link = reverse('wish', kwargs={'member_link':re.sub('-', '', str(member.member_link))})
-            member_link = urlunsplit((URL_PARTS['scheme'], URL_PARTS['netloc'], path_link, '', ''))
-            message_body = 'Your wish come true!\n\n' \
-            'Kindly make your wish using the link below:\n{0}\n\n' \
-            'Deadline: Friday (Dec 11) at 12:00PM\n\n' \
-            'Shuffling will be done on Friday as well so make sure your wish has been listed!'.format(member_link)
-
-            django_rq.enqueue(
-                send_mail,
-                subject='Kris Kringle',
-                message=message_body,
-                from_email=SENDER,
-                recipient_list=[member.email,],
-                fail_silently=False
-            )
-
-        if len(unresponsive_members) > 0:
-            return redirect('members', org_link=org_link)
-
-        return render(request, 'shuffle.html')
+    context = {'members':members, 'lazy_members_email':lazy_members_email, 'org_link':org_link}
+    return render(request, 'shuffle.html', context)

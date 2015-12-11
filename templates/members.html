@@ -30,10 +30,7 @@
 	{% if do_shuffle %}
 	<div class="col-md-4 col-md-offset-4">
 		<div class="shuffle-form-container">
-			<form action="{% url 'shuffle' org_link %}" method="POST">
-				{% csrf_token %}
-				<button type="submit" class="btn btn-lg btn-primary">Shuffle Now</button>
-			</form>
+			<a href="{% url 'shuffle' org_link %}" class="btn btn-lg btn-primary" role="button">Shuffle Now</a>
 		</div>
 	</div>
 	{% endif %}
