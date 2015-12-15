@@ -4,9 +4,15 @@
 
 
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-12">
+	
+		<div class="step-process-container row">
+			<div class="col-md-2 steps">
+				Create Organization
+			</div>
+		</div>
 
-        <div class="organization-form-container">
+        <div class="organization-form-container row">
             <form action="/" method="POST">
                 <div class="form-inline">
                     {% csrf_token %}
@@ -14,7 +20,7 @@
                         <div class="input-group col-md-12">
                             {{ org_form.organization_name }}
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-lg btn-primary">Create</button>
+                                <button type="submit" class="btn btn-lg btn-success">Create</button>
                             </span>
                         </div>
                         {% if org_form.organization_name.errors %}

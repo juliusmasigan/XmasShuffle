@@ -4,7 +4,7 @@
 
 
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1 col-lg-offset-0 col-lg-12">
 
         <div class="organization-form-container">
             <form action="{{ form_action }}" method="POST">
@@ -14,7 +14,7 @@
                         <div class="input-group col-md-12">
                             {{ org_form.organization_members }}
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-lg btn-primary">Create</button>
+                                <button type="submit" class="btn btn-lg btn-success">Create</button>
                             </span>
                         </div>
                         {% if org_form.organization_members.errors %}
