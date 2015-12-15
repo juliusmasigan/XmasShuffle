@@ -7,6 +7,7 @@ from urlparse import urlunsplit
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
+from django.db.models import Q
 from django.core.mail import send_mail
 
 from .forms import OrganizationRegistrationForm, OrganizationMembersForm, WishForm
@@ -121,17 +122,20 @@ def wish(request, member_link=None):
     return render(request, 'wish.html', context)
 
 def resend_notification(members):
-	for member in members:
-		message_body = '{0}'.format(member.member_link)
+    for member in members:
+        message_body = 'Your wish come true!\n\n' \
+        'Kindly make your wish using the link below:\n{0}\n\n' \
+        'Deadline: Friday (Dec 11) at 12:00PM\n\n' \
+        'Shuffling will be done on Friday as well so make sure your wish has been listed!'.format(member.member_link)
 
-		django_rq.enqueue(
-			send_mail,
-			subject='Kris Kringle',
-			message=message_body, 
-			from_email=SENDER,
-			recipient_list=[member.email,],
-			fail_silently=False
-		)
+        django_rq.enqueue(
+            send_mail,
+            subject='Kris Kringle',
+            message=message_body, 
+            from_email=SENDER,
+            recipient_list=[member.email,],
+            fail_silently=False
+        )
 
 def shuffle_members(members):
 	members_id = []
@@ -142,7 +146,7 @@ def shuffle_members(members):
 	pairings = []
 	random.shuffle(members_id)
 	mail_subject = 'Kris Kringle'
-	message_body = 'You picked {0}! \nGrant his/her wish. \n\n {1}'
+	message_body = 'You picked {0}!\n\n{0} wishes to have at least one of the following:\n{1}'
 	for index in range(len(members_id)):
 		try:
 			pair = members.get(pk=members_id[index])
@@ -161,26 +165,26 @@ def shuffle_members(members):
 			)
 
 def shuffle(request, org_link=None):
-	global URL_PARTS
-	URL_PARTS = {'scheme':request.META.get('wsgi.url_scheme'), 'netloc':request.META.get('HTTP_HOST')}
-	members = Member.objects.filter(organization__org_link=org_link)
+    global URL_PARTS
+    URL_PARTS = {'scheme':request.META.get('wsgi.url_scheme'), 'netloc':request.META.get('HTTP_HOST')}
+    members = Member.objects.filter(organization__org_link=org_link)
 
-	lazy_members_email = []
-	lazy_members = []
-	for member in members:
-		path_link = reverse('wish', kwargs={'member_link':re.sub('-', '', str(member.member_link))})
-		member_link = urlunsplit((URL_PARTS['scheme'], URL_PARTS['netloc'], path_link, '', ''))
-		member.member_link = member_link
-		if len(member.code_name.strip()) == 0 or len(member.wish_list.strip()) == 0:
-			lazy_members.append(member)
-			lazy_members_email.append(member.email)
+    lazy_members_email = []
+    lazy_members = []
+    for member in members:
+        path_link = reverse('wish', kwargs={'member_link':re.sub('-', '', str(member.member_link))})
+        member_link = urlunsplit((URL_PARTS['scheme'], URL_PARTS['netloc'], path_link, '', ''))
+        member.member_link = member_link
+        if len(member.code_name.strip()) == 0 or len(member.wish_list.strip()) == 0:
+            lazy_members.append(member)
+            lazy_members_email.append(member.email)
 
-	if request.method == "POST":
-		action = request.POST.get('action')
-		if action == 'resend_notif':
-			resend_notification(lazy_members)
-		else:
-			shuffle_members(members)
-	
-	context = {'members':members, 'lazy_members_email':lazy_members_email, 'org_link':org_link}
-	return render(request, 'shuffle.html', context)
+    if request.method == "POST":
+        action = request.POST.get('action')
+        if action == 'resend_notif':
+            resend_notification(lazy_members)
+        else:
+            shuffle_members(members)
+
+    context = {'members':members, 'lazy_members_email':lazy_members_email, 'org_link':org_link}
+    return render(request, 'shuffle.html', context)
